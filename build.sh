@@ -1,0 +1,5 @@
+
+
+
+
+pyinstaller --noconfirm trifomaxha.py
