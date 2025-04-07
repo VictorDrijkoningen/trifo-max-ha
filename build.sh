@@ -2,4 +2,4 @@
 
 
 
-pyinstaller --noconfirm trifomaxha.py
+./.venv/bin/pyinstaller --noconfirm trifomaxha.py
