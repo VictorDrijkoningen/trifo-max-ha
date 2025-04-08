@@ -124,4 +124,4 @@ async def loop():
     while running:
         await asyncio.sleep(1)
 
-asyncio.gather(main())
+asyncio.gather(main(), loop())
