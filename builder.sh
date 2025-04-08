@@ -21,7 +21,7 @@ fi
 ARCH=$1
 ENTRYPOINT=$2
 HIDDEN_IMPORTS=""
-IMPORTS=""
+IMPORTS="microdot"
 
 # Parse additional arguments
 shift 2 # Skip first two arguments
