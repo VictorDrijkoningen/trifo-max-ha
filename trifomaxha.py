@@ -5,7 +5,7 @@ import helpers
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
 CONFIG_FILE = "config_mono_auto_tasks.json.sample"
-
+running = True
 tasks = [
     {
         "status": "true",
@@ -50,16 +50,22 @@ app = Microdot()
 async def index(request):
     return 'Hello, world!'
 
-@app.route('/see')
+@app.route('/stop')
+async def stop(request):
+    running = False
+    return 'Stopping, world!'
+
+@app.route('/config_file')
 async def see(request):
     return str(helpers.import_config_file(CONFIG_FILE=CONFIG_FILE))
 
 async def main():
+    global running
     # start the server in a background task
     server = asyncio.create_task(app.start_server())
 
     # ... do other asynchronous work here ...
-    while True:
+    while running:
         await asyncio.sleep(1)
     # cleanup before ending the application
     await server
