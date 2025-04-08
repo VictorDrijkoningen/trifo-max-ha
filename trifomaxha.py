@@ -4,7 +4,7 @@ import helpers
 
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
-CONFIG_FILE = "config_mono_auto_tasks.json.sample"
+# CONFIG_FILE = "config_mono_auto_tasks.json.sample"
 running = True
 tasks = [
     {
