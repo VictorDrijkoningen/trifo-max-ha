@@ -1,11 +1,69 @@
+import os
 import json
 
 def test():
     return 3
     
 
+def wraps(wrapped):
+    def _(wrapper):
+        return wrapper
+    return _
 
-def export_config_file(CONFIG_FILE, tasks:list):
+
+def get_simple_schema(CONFIG_FILE):
+    config_data = import_config_file(CONFIG_FILE)
+
+    if len(config_data['data']) == 7:
+        simple_schema = [
+            {'status': config_data['data'][0]['status'], 'time': config_data['data'][0]['time']},
+            {'status': config_data['data'][1]['status'], 'time': config_data['data'][1]['time']},
+            {'status': config_data['data'][2]['status'], 'time': config_data['data'][2]['time']},
+            {'status': config_data['data'][3]['status'], 'time': config_data['data'][3]['time']},
+            {'status': config_data['data'][4]['status'], 'time': config_data['data'][4]['time']},
+            {'status': config_data['data'][5]['status'], 'time': config_data['data'][5]['time']},
+            {'status': config_data['data'][6]['status'], 'time': config_data['data'][6]['time']},
+
+        ]
+    else:
+        simple_schema = [
+            {'status': "false", 'time': '00:00'},
+            {'status': "false", 'time': '00:00'},
+            {'status': "false", 'time': '00:00'},
+            {'status': "false", 'time': '00:00'},
+            {'status': "false", 'time': '00:00'},
+            {'status': "false", 'time': '00:00'},
+            {'status': "false", 'time': '00:00'},
+
+        ]
+    return simple_schema
+
+def export_config_file(CONFIG_FILE, simpledata:list):
+    export = dict()
+    export['name'] = 'auto-work'
+    data_list = list()
+
+    for num in range(7):
+        export_task = dict()
+        export_task['id'] = str(num)
+        export_task['status'] = simpledata[num]['status']
+        export_task['mode'] = str(1)
+        export_task['time'] = simpledata[num]['time']
+        export_task['repeat'] = num*"0" + "1" + (6-num)*"0"
+        export_task['mopping_mode'] = str(0)
+        export_task['invalid'] = 'false'
+        export_task['clean_area'] = list()
+
+        data_list.append(export_task)
+
+    export['cnt'] = str(7)
+    export['data'] = data_list
+
+    with open(CONFIG_FILE, 'w') as f:
+        json.dump(export, f, indent=4)
+
+
+def export_config_file_old(CONFIG_FILE, tasks:list):
     cnt = 0
     export = dict()
     export['name'] = 'auto-work'
@@ -37,6 +95,66 @@ def import_config_file(CONFIG_FILE):
         config_data = json.load(f)
     return config_data
 
+def change_setting(CONFIG_FILE, message, simple_schema):
+    try:
+        message = json.loads(message)
+        if "mondaytime" in message.keys():
+            simple_schema[0]['time'] = message['mondaytime']
+        if "tuesdaytime" in message.keys():
+            simple_schema[1]['time'] = message['tuesdaytime']
+        if "wednesdaytime" in message.keys():
+            simple_schema[2]['time'] = message['wednesdaytime']
+        if "thursdaytime" in message.keys():
+            simple_schema[3]['time'] = message['thursdaytime']
+        if "fridaytime" in message.keys():
+            simple_schema[4]['time'] = message['fridaytime']
+        if "saturdaytime" in message.keys():
+            simple_schema[5]['time'] = message['saturdaytime']
+        if "sundaytime" in message.keys():
+            simple_schema[6]['time'] = message['sundaytime']
+        
+        if "mondaystatus" in message.keys():
+            if message['mondaystatus'] == True:
+                simple_schema[0]['status'] = "true"
+            else:
+                simple_schema[0]['status'] = "false"
+        if "tuesdaystatus" in message.keys():
+            if message['tuesdaystatus'] == True:
+                simple_schema[1]['status'] = True
+            else:
+                simple_schema[1]['status'] = "false"
+        if "wednesdaystatus" in message.keys():
+            if message['wednesdaystatus'] == True:
+                simple_schema[2]['status'] = "true"
+            else:
+                simple_schema[2]['status'] = "false"
+        if "thursdaystatus" in message.keys():
+            if message['thursdaystatus'] == True:
+                simple_schema[3]['status'] = "true"
+            else:
+                simple_schema[3]['status'] = "false"
+        if "fridaystatus" in message.keys():
+            if message['fridaystatus'] == True:
+                simple_schema[4]['status'] = "true"
+            else:
+                simple_schema[4]['status'] = "false"
+        if "saturdaystatus" in message.keys():
+            if message['saturdaystatus'] == True:
+                simple_schema[5]['status'] = "true"
+            else:
+                simple_schema[5]['status'] = "false"
+        if "sundaystatus" in message.keys():
+            if message['sundaystatus'] == True:
+                simple_schema[6]['status'] = "true"
+            else:
+                simple_schema[6]['status'] = "false"
+        if "SUBMIT" in message.keys():
+            os.system("reboot")
+        
+        export_config_file(CONFIG_FILE, simple_schema)
+    except Exception as e:
+        print(f"Malformed json {e}")
+
 
 def settings_page(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)
@@ -51,51 +169,177 @@ def settings_page(CONFIG_FILE):
             </thead>
             <tbody>
                 <tr>
+                    <td></td>
                     <td>
                         <div style="text-align: center;">
-                            <p id="slider1value">90</p>
-                            <input onchange="slider1()" type="range" min="0" max="180" value="90" id="slider1">
+                            <h3>MAX Web Server</h3>
+                            <button onclick="location.href='/stop'"> STOP webserver </button>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+
+
+
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                            <input onchange="mondaystatus()" type="checkbox"  id="mondaystatus" """+ str("checked" if config_data['data'][0]['status'] == "true" else "")+""">
                         </div>
                     </td>
                     <td>
-                        <h3>ESP Web Server</h3>
                         <div style="text-align: center;">
                             <p>
-                                <button onclick="offfunc()" class="">OFF</button>
-                                <button onclick="onfunc()" class="">ON</button>
+                                MONDAY
                             </p>
                         </div>
                     </td>
                     <td>
                         <div style="text-align: center;">
-                            <p id="slider2value">90</p>
-                            <input onchange="slider2()" type="range" min="0" max="180" value="90" id="slider2">
+                            <input type="time" onchange="mondaytime()" id="mondaytime" value='"""+ config_data['data'][0]['time']+"""'>
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                            <input onchange="tuesdaystatus()" type="checkbox"  id="tuesdaystatus" """+ str("checked" if config_data['data'][1]['status'] == "true" else "")+""">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                TUESDAY
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <input type="time" onchange="tuesdaytime()" id="tuesdaytime" value='"""+ config_data['data'][1]['time']+"""'>
                         </div>
                     </td>
                 </tr>
 
                 <tr>
                     <td>
-                        <div style="background-color: grey; border-radius: 50px;">
-                            <div id="joy1Div" style="margin: auto; width:300px;height:300px;"></div>
+                        <div style="text-align: center;">
+                            <input onchange="wednesdaystatus()" type="checkbox"  id="wednesdaystatus" """+ str("checked" if config_data['data'][2]['status'] == "true" else "")+""">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                WEDNESDAY
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <input type="time" onchange="wednesdaytime()" id="wednesdaytime" value='"""+ config_data['data'][2]['time']+"""'>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                            <input onchange="thursdaystatus()" type="checkbox"  id="thursdaystatus" """+ str("checked" if config_data['data'][3]['status'] == "true" else "")+""">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                THURSDAY
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <input type="time" onchange="thursdaytime()" id="thursdaytime" value='"""+ config_data['data'][3]['time']+"""'>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                            <input onchange="fridaystatus()" type="checkbox"  id="fridaystatus" """+ str("checked" if config_data['data'][4]['status'] == "true" else "")+""">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                FRIDAY
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <input type="time" onchange="fridaytime()" id="fridaytime" value='"""+ config_data['data'][4]['time']+"""'>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                            <input onchange="saturdaystatus()" type="checkbox"  id="saturdaystatus" """+ str("checked" if config_data['data'][5]['status'] == "true" else "")+""">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                SATURDAY
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <input type="time" onchange="saturdaytime()" id="saturdaytime" value='"""+ config_data['data'][5]['time']+"""'>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                            <input onchange="sundaystatus()" type="checkbox"  id="sundaystatus" """+ str("checked" if config_data['data'][6]['status'] == "true" else "")+""">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                SUNDAY
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <input type="time" onchange="sundaytime()" id="sundaytime" value='"""+ config_data['data'][6]['time']+"""'>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>
+                        <div style="text-align: center;">
+                            <button onclick="submit()">SUBMIT</button>
                         </div>
                     </td>
                     <td></td>
-                    <td>
-                        <div style="background-color: grey; border-radius: 50px;">
-                            <div id="joy2Div" style="margin: auto; width:300px;height:300px;"></div>
-                        </div>
-                    </td>
                 </tr>
             </tbody>
         </table>
 
+        
 
-        <script src="joy.js"></script>
 
         <script type="text/javascript">
-            alert(window.location.host);
-            var socket = new WebSocket("ws://"+window.location.host+"/data");
+            var socket = new WebSocket("ws://"+window.location.host+"/websocket");
             var wsclosed = false;
             const retrytime = 3000;
             var lastretry = window.performance.now();
@@ -114,63 +358,110 @@ def settings_page(CONFIG_FILE):
 
                     if (window.performance.now()-lastretry > retrytime){
                         console.log("making new connection");
-                        socket = new WebSocket("ws://"+window.location.host+"/data");
+                        socket = new WebSocket("ws://"+window.location.host+"/websocket");
                         lastretry = window.performance.now();
                     }
                 }
             }
 
-
-            var lastsend = window.performance.now()
-            // Create JoyStick object into the DIV 'joyDiv'
-            var Joy1 = new JoyStick('joy1Div', {}, async function(stickData) {
-                if (window.performance.now() > lastsend + 50 || (stickData.x == 0 && stickData.y == 0)){
-                    send_data(JSON.stringify({
-                        'joy1x': stickData.x,
-                        'joy1y': stickData.y
-                    }));
-                    lastsend = window.performance.now();
-                }
-            });
-            var Joy2 = new JoyStick('joy2Div', {}, async function(stickData) {
-                if (window.performance.now() > lastsend + 50 || (stickData.x == 0 && stickData.y == 0)){
-                    send_data(JSON.stringify({
-                        'joy2x': stickData.x,
-                        'joy2y': stickData.y
-                    }));
-                    lastsend = window.performance.now();
-                }
-            });
-
-            function slider1() {
-                var x = document.getElementById("slider1").value;
-                document.getElementById("slider1value").innerHTML = x;
-
+            function mondaytime() {
                 send_data(JSON.stringify({
-                    'slider1': x
+                    'mondaytime': document.getElementById("mondaytime").value
+                }));
+                location.reload();
+            }
+            function tuesdaytime() {
+                send_data(JSON.stringify({
+                    'tuesdaytime': document.getElementById("tuesdaytime").value
+                }));
+                location.reload();
+            }
+            function wednesdaytime() {
+                send_data(JSON.stringify({
+                    'wednesdaytime': document.getElementById("wednesdaytime").value
+                }));
+                location.reload();
+            }
+            function thursdaytime() {
+                send_data(JSON.stringify({
+                    'thursdaytime': document.getElementById("thursdaytime").value
+                }));
+                location.reload();
+            }
+
+            function fridaytime() {
+                send_data(JSON.stringify({
+                    'fridaytime': document.getElementById("fridaytime").value
+                }));
+                location.reload();
+            }
+
+            function saturdaytime() {
+                send_data(JSON.stringify({
+                    'saturdaytime': document.getElementById("saturdaytime").value
+                }));
+                location.reload();
+            }
+
+            function sundaytime() {
+                send_data(JSON.stringify({
+                    'sundaytime': document.getElementById("sundaytime").value
+                }));
+                location.reload();
+            }
+
+
+
+            function mondaystatus() {
+                send_data(JSON.stringify({
+                    'mondaystatus': document.getElementById("mondaystatus").checked
+                }));
+                location.reload();
+            }
+
+            function tuesdaystatus() {
+                send_data(JSON.stringify({
+                    'tuesdaystatus': document.getElementById("tuesdaystatus").checked
+                }));
+                location.reload();
+            }
+            function wednesdaystatus() {
+                send_data(JSON.stringify({
+                    'wednesdaystatus': document.getElementById("wednesdaystatus").checked
+                }));
+                location.reload();
+            }
+            function thursdaystatus() {
+                send_data(JSON.stringify({
+                    'thursdaystatus': document.getElementById("thursdaystatus").checked
+                }));
+                location.reload();
+            }
+            function fridaystatus() {
+                send_data(JSON.stringify({
+                    'fridaystatus': document.getElementById("fridaystatus").checked
+                }));
+                location.reload();
+            }
+            function saturdaystatus() {
+                send_data(JSON.stringify({
+                    'saturdaystatus': document.getElementById("saturdaystatus").checked
+                }));
+                location.reload();
+            }
+            function sundaystatus() {
+                send_data(JSON.stringify({
+                    'sundaystatus': document.getElementById("sundaystatus").checked
+                }));
+                location.reload();
+            }
+
+            function submit() {
+                send_data(JSON.stringify({
+                    'SUBMIT': 'SUBMIT'
                 }));
             }
 
-            function slider2() {
-                var x = document.getElementById("slider2").value;
-                document.getElementById("slider2value").innerHTML = x;
-
-                send_data(JSON.stringify({
-                    'slider2': x
-                }));
-            }
-
-
-            function offfunc() {
-                send_data(JSON.stringify({
-                    'off': '_'
-                }));
-            }
-            function onfunc() {
-                send_data(JSON.stringify({
-                    'on': '_'
-                }));
-            }
         </script>
 
     </body>

@@ -1,54 +1,21 @@
 import asyncio
 from microdot import Microdot
 import helpers
-
+from ws import with_websocket
+import json
+import os
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
-# CONFIG_FILE = "config_mono_auto_tasks.json.sample"
 running = True
-tasks = [
-    {
-        "status": "true",
-        "mode": "1",
-        "time": "09:30",
-        "repeat": "1000000",
-        "mopping_mode": "2",
-        "invalid": "false",
-        "clean_area": [
-            
-        ]
-    },
-    {
-        "status": "true",
-        "mode": "1",
-        "time": "09:30",
-        "repeat": "0010000",
-        "mopping_mode": "0",
-        "invalid": "false",
-        "clean_area": [
-            
-        ]
-    },
-    {
-        "status": "true",
-        "mode": "2",
-        "time": "09:30",
-        "repeat": "0000100",
-        "mopping_mode": "0",
-        "invalid": "false",
-        "clean_area": [
-            
-        ]
-    }
-]
 
+simple_schema = helpers.get_simple_schema(CONFIG_FILE)
 
 
 app = Microdot()
 
 @app.route('/')
 async def index(request):
-    return '<h1>Hello, world!</h1>'
+    return '<h1>Hello, world!</h1>', {'Content-Type': 'text/html'}
 
 @app.route('/configfile')
 async def configfile(request):
@@ -56,14 +23,26 @@ async def configfile(request):
 
 @app.route('/settings')
 async def settings(request):
-    return helpers.settings_page(CONFIG_FILE)
+    return helpers.settings_page(CONFIG_FILE), {'Content-Type': 'text/html'}
 
 @app.route('/stop')
 async def stop(request):
     global running
     running = False
     request.app.shutdown()
-    return 'Stopping, world!'
+    return 'Stopping server...'
+
+
+@app.route('/websocket')
+@with_websocket
+async def websocket(request, ws):
+    global simple_schema
+    while True:
+        message = await ws.receive()
+        print("ws: "+message)
+        helpers.change_setting(CONFIG_FILE, message, simple_schema)
+
+
 
 @app.route('/config_file')
 async def see(request):
@@ -76,10 +55,11 @@ async def main():
 
     while running:
         await asyncio.sleep(1)
-        # print("running")
 
     await server
 
 
-
-asyncio.run(main())
+try:
+    asyncio.run(main())
+except KeyboardInterrupt:
+    print("exiting")
