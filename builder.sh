@@ -1,48 +1,10 @@
 #!/bin/bash
 
-help() {
-        echo "Usage: $0 <arch> <entrypoint> [--list] [--imports import1,import2,...]"
-        echo ""
-        echo "Supported architectures:" 
-        echo "  • armv7l - Mostly used in IoT devices"
-        echo "  • aarch64 - Most used in SBCs and phones"
-        echo "  • i386 - Most common 32-bit architecture"
-        echo "  • x86_64 - Most common 64-bit architecture"
-        echo "  • ppc64le - Used in IBM Power Systems"
-        echo "  • mips64 - Used in routers and IoT devices"
-        exit 0
-}
-
-if [ "$#" -lt 2 ]; then
-        help
-        exit 1
-fi
-
-ARCH=$1
-ENTRYPOINT=$2
+ARCH='aarch64'
+ENTRYPOINT=$1
 HIDDEN_IMPORTS=""
 IMPORTS=""
 
-# Parse additional arguments
-shift 2 # Skip first two arguments
-while (( "$#" )); do
-    case "$1" in
-        --imports)
-            IFS=',' read -ra ADDR <<< "$2"
-            for i in "${ADDR[@]}"; do
-                HIDDEN_IMPORTS+=" --hidden-import $i"
-                IMPORTS+=" $i"
-            done
-            shift 2
-            ;;
-        --list)
-            help
-            ;;
-        *)
-            shift
-            ;;
-    esac
-done
 
 run_docker() {
         echo -e "\e[34mBuilding for $ARCH with entrypoint $ENTRYPOINT and imports $IMPORTS...\e[0m\c"
