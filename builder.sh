@@ -69,11 +69,6 @@ run_docker() {
 }
 
 case $ARCH in
-        "x86_64") run_docker "linux/amd64" "amd64/python:3.6-jessie" ;;
-        "i386") run_docker "linux/i386" "i386/python:3.6-jessie" ;;
-        "armv7l") run_docker "linux/arm" "arm32v7/python:3.6-jessie" ;;
-        "aarch64") run_docker "linux/arm64" "arm64v8/python:3.6-jessie" ;;
-        "ppc64le") run_docker "linux/ppc64le" "ppc64le/python:3.6-jessie" ;;
-        "mips64") run_docker "linux/mips64le" "mips64le/python:3.9.0a5-buster" ;;
+        "aarch64") run_docker "linux/arm64" "arm64v8/python:3.6-bookworm" ;;
         *) help;;
 esac
