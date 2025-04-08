@@ -50,6 +50,10 @@ app = Microdot()
 async def index(request):
     return 'Hello, world!'
 
+@app.route('/config')
+async def config(request):
+    return helpers.import_config_file(CONFIG_FILE)
+
 @app.route('/stop')
 async def stop(request):
     global running
@@ -68,7 +72,7 @@ async def main():
 
     while running:
         await asyncio.sleep(1)
-        print("running")
+        # print("running")
 
     await server
 
