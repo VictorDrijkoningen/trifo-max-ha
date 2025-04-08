@@ -92,7 +92,6 @@ def run():
 run()
 
 
-import asyncio
 from microdot import Microdot
 
 app = Microdot()
@@ -107,23 +106,4 @@ async def stop(request):
     running = False
     return 'stopping, world!'
 
-
-
-async def main():
-    # start the server in a background task
-    server = asyncio.create_task(app.start_server(port=8080, debug=True))
-
-    # ... do other asynchronous work here ...
-    global running
-    while running:
-        await asyncio.sleep(1)
-    # cleanup before ending the application
-    await server
-
-async def loop():
-    global running
-    running = True
-    while running:
-        await asyncio.sleep(1)
-
-asyncio.run(main(), loop())
+app.run()
