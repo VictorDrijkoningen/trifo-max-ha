@@ -69,6 +69,6 @@ run_docker() {
 }
 
 case $ARCH in
-        "aarch64") run_docker "linux/arm64" "arm64v8/python:3.9.17-buster" ;;
+        "aarch64") run_docker "linux/arm64" "arm64v8/python:3.7.11-stretch" ;;
         *) help;;
 esac
