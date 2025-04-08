@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ARCH='aarch64'
-ENTRYPOINT=$1
+ENTRYPOINT='trifomaxha.py'
 HIDDEN_IMPORTS=""
 IMPORTS=""
 
