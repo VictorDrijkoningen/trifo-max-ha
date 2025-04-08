@@ -14,7 +14,7 @@ run_docker() {
         ENTRYPOINT_FILE=$(basename $ENTRYPOINT)
         ELF_FILE=$(echo $ENTRYPOINT_FILE | sed 's/.py//g')
 
-        docker run --platform "linux/arm64" --rm -t -v $(pwd):/root/ $2 /bin/bash -c "apt -qq update 2> /dev/null > /dev/null; \
+        docker run --platform $1 --rm -t -v $(pwd):/root/ $2 /bin/bash -c "apt -qq update 2> /dev/null > /dev/null; \
         apt -qq install gcc zlib1g-dev -y 2> /dev/null > /dev/null; \
         pip3 -q install --upgrade pip; \
         pip3 install pyinstaller $IMPORTS; \
