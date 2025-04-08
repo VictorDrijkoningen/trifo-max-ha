@@ -111,4 +111,4 @@ async def main():
     await server
 
 
-asyncio.run(main())
+asyncio.gather(main())
