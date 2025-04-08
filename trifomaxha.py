@@ -109,8 +109,9 @@ async def main():
     server = asyncio.create_task(app.start_server())
 
     # ... do other asynchronous work here ...
-
+    while True:
+        await asyncio.sleep(1)
     # cleanup before ending the application
     await server
 
-asyncio.run(main())
+asyncio.gather(main())
