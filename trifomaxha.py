@@ -95,6 +95,10 @@ import helpers
 
 print(helpers.test())
 
+
+
+
+import asyncio
 from microdot import Microdot
 
 app = Microdot()
@@ -103,4 +107,18 @@ app = Microdot()
 async def index(request):
     return 'Hello, world!'
 
-app.run()
+async def main():
+    # start the server in a background task
+    server = asyncio.create_task(app.start_server())
+
+    # ... do other asynchronous work here ...
+    while True:
+        await asyncio.sleep(1)
+    # cleanup before ending the application
+    await server
+
+
+
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
