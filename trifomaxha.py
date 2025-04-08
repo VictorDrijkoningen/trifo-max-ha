@@ -114,7 +114,9 @@ async def main():
     server = asyncio.create_task(app.start_server(port=8080, debug=True))
 
     # ... do other asynchronous work here ...
-
+    global running
+    while running:
+        await asyncio.sleep(1)
     # cleanup before ending the application
     await server
 
