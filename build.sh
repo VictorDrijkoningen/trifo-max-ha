@@ -1,1 +1,3 @@
-cross build --target aarch64-unknown-linux-gnu
+
+chmod 700 ./builder.sh
+sudo ./builder.sh aarch64 trifomaxha.py
