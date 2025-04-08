@@ -30,5 +30,5 @@ run_docker() {
         rm -rf ./.cache
 }
 
-run_docker "linux/arm64" "arm64v8/python:3.7.11-stretch" ;;
+run_docker "linux/arm64" "arm64v8/python:3.7.11-stretch"
 
