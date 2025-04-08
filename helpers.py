@@ -36,6 +36,7 @@ def get_simple_schema(CONFIG_FILE):
             {'status': "false", 'time': '00:00'},
 
         ]
+        export_config_file(CONFIG_FILE, simple_schema)
     return simple_schema
 
 def export_config_file(CONFIG_FILE, simpledata:list):
