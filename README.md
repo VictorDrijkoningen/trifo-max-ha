@@ -7,3 +7,6 @@ This repo contains the software that can be run on a trifo max to create an api 
 
 - have docker installed
 
+- run build.sh
+
+- move trifomaxha.py-aarch64 to trifo max

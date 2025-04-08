@@ -50,9 +50,13 @@ app = Microdot()
 async def index(request):
     return 'Hello, world!'
 
-@app.route('/config')
-async def config(request):
+@app.route('/configfile')
+async def configfile(request):
     return helpers.import_config_file(CONFIG_FILE)
+
+@app.route('/settings')
+async def settings(request):
+    return helpers.settings_page(CONFIG_FILE)
 
 @app.route('/stop')
 async def stop(request):
