@@ -48,7 +48,7 @@ app = Microdot()
 
 @app.route('/')
 async def index(request):
-    return 'Hello, world!'
+    return '<h1>Hello, world!</h1>'
 
 @app.route('/configfile')
 async def configfile(request):
