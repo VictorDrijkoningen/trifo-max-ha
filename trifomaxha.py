@@ -52,6 +52,7 @@ async def index(request):
 
 @app.route('/stop')
 async def stop(request):
+    global running
     running = False
     request.app.shutdown()
     return 'Stopping, world!'
