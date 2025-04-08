@@ -1,7 +1,7 @@
 import json
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
-# CONFIG_FILE = "config_mono_auto_tasks.json.sample"
+CONFIG_FILE = "config_mono_auto_tasks.json.sample"
 
 
 def import_config_file():
@@ -95,7 +95,6 @@ import helpers
 
 print(helpers.test())
 
-import asyncio
 from microdot import Microdot
 
 app = Microdot()
@@ -104,14 +103,4 @@ app = Microdot()
 async def index(request):
     return 'Hello, world!'
 
-async def main():
-    # start the server in a background task
-    server = asyncio.create_task(app.start_server())
-
-    # ... do other asynchronous work here ...
-    while True:
-        await asyncio.sleep(1)
-    # cleanup before ending the application
-    await server
-
-asyncio.gather(main())
+app.run()
