@@ -1,5 +1,1 @@
-
-
-
-
-./.venv/bin/pyinstaller --onefile --noconfirm trifomaxha.py
+cross build --target aarch64-unknown-linux-gnu
