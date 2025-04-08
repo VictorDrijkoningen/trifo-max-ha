@@ -53,6 +53,7 @@ async def index(request):
 @app.route('/stop')
 async def stop(request):
     running = False
+    request.app.shutdown()
     return 'Stopping, world!'
 
 @app.route('/config_file')
