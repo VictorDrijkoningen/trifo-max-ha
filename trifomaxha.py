@@ -73,4 +73,4 @@ async def main():
 
 
 
-asyncio.run(main())
+asyncio.gather(main())
