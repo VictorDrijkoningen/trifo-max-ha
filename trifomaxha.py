@@ -2,8 +2,6 @@ import asyncio
 from microdot import Microdot
 import helpers
 from ws import with_websocket
-import json
-import os
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
 running = True

@@ -18,6 +18,7 @@ cd /root
 mv ./trifomaxha.py-aarch64 ./trifomaxha.py-aarch64.current
 ./trifomaxha.py-aarch64.current > trifomaxha.log &
 """)
+        print("installed autostart file")
 
 def get_simple_schema(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)
