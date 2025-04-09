@@ -198,7 +198,7 @@ def index_page():
                     <td>
                         <div style="text-align: center;">
                             <p>
-                                <button onclick="location.href='/settings'">Settings page for changing max's time schedule</button>
+                                <button onclick="location.href='/settings'">Change time schedule</button>
                             </p>
                         </div>
                     </td>
