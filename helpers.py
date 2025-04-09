@@ -10,6 +10,13 @@ def wraps(wrapped):
         return wrapper
     return _
 
+def check_auto_start():
+    if not os.path.isfile('/etc/init.d/S90trifomaxha.sh'):
+        with open("/etc/init.d/S90trifomaxha.sh", 'w') as f:
+            f.write("""#! /bin/sh
+cd /root
+./trifomaxha.py-aarch64 > trifomaxha.log &
+""")
 
 def get_simple_schema(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)

@@ -7,9 +7,9 @@ import os
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
 running = True
+helpers.check_auto_start()
 
 simple_schema = helpers.get_simple_schema(CONFIG_FILE)
-
 
 app = Microdot()
 
