@@ -1,8 +1,21 @@
 import os
 import json
 
-def test():
-    return 3
+def check_env_file(ENV_FILE: str) -> dict:
+    try:
+        with open(ENV_FILE, "r") as f:
+            env = json.load(f)
+    except:
+        env = dict()
+
+    if not "timezone" in env.keys():
+        env['timezone'] = 0
+        save_env_file(ENV_FILE, env)
+    return env
+
+def save_env_file(ENV_FILE: str, env: dict) -> None:
+    with open(ENV_FILE, "w") as f:
+        json.dump(env, f)
     
 
 def wraps(wrapped):
@@ -10,7 +23,7 @@ def wraps(wrapped):
         return wrapper
     return _
 
-def check_auto_start():
+def check_auto_start() -> None:
     if not os.path.isfile('/etc/init.d/S90trifomaxha.sh'):
         with open("/etc/init.d/S90trifomaxha.sh", 'w') as f:
             f.write("""#! /bin/sh

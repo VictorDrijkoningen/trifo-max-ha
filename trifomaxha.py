@@ -4,8 +4,10 @@ import helpers
 from ws import with_websocket
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
+ENV_FILE = "./trifomaxha_env.json"
 running = True
 helpers.check_auto_start()
+env = helpers.check_env_file(ENV_FILE)
 
 simple_schema = helpers.get_simple_schema(CONFIG_FILE)
 
