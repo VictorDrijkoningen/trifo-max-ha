@@ -15,8 +15,10 @@ def check_auto_start():
         with open("/etc/init.d/S90trifomaxha.sh", 'w') as f:
             f.write("""#! /bin/sh
 cd /root
-./trifomaxha.py-aarch64 > trifomaxha.log &
+mv ./trifomaxha.py-aarch64 ./trifomaxha.py-aarch64.current
+./trifomaxha.py-aarch64.current > trifomaxha.log &
 """)
+        print("installed autostart file")
 
 def get_simple_schema(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)
@@ -163,7 +165,98 @@ def change_setting(CONFIG_FILE, message, simple_schema):
     except Exception as e:
         print(f"Malformed json {e}")
 
+def index_page():
+    out = """
+<!DOCTYPE html>
+<html>
+    <head> 
+    </head>
+    <body style="text-align: center;">     
+        <table>
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div style="text-align: center;">
+                            <h3>MAX Web Server</h3>
+                            <button onclick="location.href='/stop'"> STOP webserver </button>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
 
+
+
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                <button onclick="location.href='/settings'">Change time schedule</button>
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                1
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                2
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+
+        </script>
+
+    </body>
+</html>
+
+"""
+
+    return out
 def settings_page(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)
     out = """
@@ -177,7 +270,9 @@ def settings_page(CONFIG_FILE):
             </thead>
             <tbody>
                 <tr>
-                    <td></td>
+                    <td>
+                        <button onclick="location.href='/'">Back</button>
+                    </td>
                     <td>
                         <div style="text-align: center;">
                             <h3>MAX Web Server</h3>

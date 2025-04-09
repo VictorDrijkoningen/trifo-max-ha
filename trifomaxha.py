@@ -2,8 +2,6 @@ import asyncio
 from microdot import Microdot
 import helpers
 from ws import with_websocket
-import json
-import os
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
 running = True
@@ -15,7 +13,7 @@ app = Microdot()
 
 @app.route('/')
 async def index(request):
-    return '<h1>Hello, world!</h1>', {'Content-Type': 'text/html'}
+    return helpers.index_page(), {'Content-Type': 'text/html'}
 
 @app.route('/configfile')
 async def configfile(request):
