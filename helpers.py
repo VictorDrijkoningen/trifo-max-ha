@@ -200,6 +200,12 @@ def index_page():
                     <td></td>
                 </tr>
 
+                
+                <tr>
+                    <td>Enabled</td>
+                    <td>Day</td>
+                    <td>Time in UTC</td>
+                </tr>
 
 
 

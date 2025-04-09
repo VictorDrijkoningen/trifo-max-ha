@@ -37,10 +37,11 @@ async def stop(request):
 @with_websocket
 async def websocket(request, ws):
     global simple_schema
+    global env
     while True:
         message = await ws.receive()
         print("ws: "+message)
-        helpers.change_setting(CONFIG_FILE, message, simple_schema)
+        helpers.change_setting(CONFIG_FILE, message, simple_schema, env)
 
 
 
