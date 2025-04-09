@@ -15,7 +15,8 @@ def check_auto_start():
         with open("/etc/init.d/S90trifomaxha.sh", 'w') as f:
             f.write("""#! /bin/sh
 cd /root
-./trifomaxha.py-aarch64 > trifomaxha.log &
+mv ./trifomaxha.py-aarch64 ./trifomaxha.py-aarch64.current
+./trifomaxha.py-aarch64.current > trifomaxha.log &
 """)
 
 def get_simple_schema(CONFIG_FILE):
@@ -196,7 +197,7 @@ def index_page():
                     <td>
                         <div style="text-align: center;">
                             <p>
-                                MONDAY
+                                <button onclick="location.href='/settings'">Settings page for changing max's time schedule</button>
                             </p>
                         </div>
                     </td>
@@ -215,7 +216,7 @@ def index_page():
                     <td>
                         <div style="text-align: center;">
                             <p>
-                                TUESDAY
+                                1
                             </p>
                         </div>
                     </td>
@@ -233,7 +234,7 @@ def index_page():
                     <td>
                         <div style="text-align: center;">
                             <p>
-                                WEDNESDAY
+                                2
                             </p>
                         </div>
                     </td>
@@ -268,7 +269,9 @@ def settings_page(CONFIG_FILE):
             </thead>
             <tbody>
                 <tr>
-                    <td></td>
+                    <td>
+                        <button onclick="location.href='/'">Back</button>
+                    </td>
                     <td>
                         <div style="text-align: center;">
                             <h3>MAX Web Server</h3>
