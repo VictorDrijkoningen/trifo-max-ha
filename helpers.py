@@ -194,18 +194,11 @@ def index_page():
                     <td>
                         <div style="text-align: center;">
                             <h3>MAX Web Server</h3>
-                            <button onclick="location.href='/stop'"> STOP webserver </button>
                         </div>
                     </td>
                     <td></td>
                 </tr>
 
-                
-                <tr>
-                    <td>Enabled</td>
-                    <td>Day</td>
-                    <td>Time in UTC</td>
-                </tr>
 
 
 
@@ -236,7 +229,7 @@ def index_page():
                     <td>
                         <div style="text-align: center;">
                             <p>
-                                1
+                                <button onclick="location.href='/stop'"> STOP webserver </button>
                             </p>
                         </div>
                     </td>
@@ -295,13 +288,16 @@ def settings_page(CONFIG_FILE):
                     <td>
                         <div style="text-align: center;">
                             <h3>MAX Web Server</h3>
-                            <button onclick="location.href='/stop'"> STOP webserver </button>
                         </div>
                     </td>
                     <td></td>
                 </tr>
 
-
+                <tr>
+                    <td>Enabled</td>
+                    <td>Day</td>
+                    <td>Time in UTC</td>
+                </tr>
 
 
                 <tr>
