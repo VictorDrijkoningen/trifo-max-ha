@@ -163,7 +163,98 @@ def change_setting(CONFIG_FILE, message, simple_schema):
     except Exception as e:
         print(f"Malformed json {e}")
 
+def index_page():
+    out = """
+<!DOCTYPE html>
+<html>
+    <head> 
+    </head>
+    <body style="text-align: center;">     
+        <table>
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div style="text-align: center;">
+                            <h3>MAX Web Server</h3>
+                            <button onclick="location.href='/stop'"> STOP webserver </button>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
 
+
+
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                MONDAY
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                TUESDAY
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                            <p>
+                                WEDNESDAY
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="text-align: center;">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+
+        </script>
+
+    </body>
+</html>
+
+"""
+
+    return out
 def settings_page(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)
     out = """

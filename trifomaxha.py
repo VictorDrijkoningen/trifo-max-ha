@@ -15,7 +15,7 @@ app = Microdot()
 
 @app.route('/')
 async def index(request):
-    return '<h1>Hello, world!</h1>', {'Content-Type': 'text/html'}
+    return helpers.index_page(), {'Content-Type': 'text/html'}
 
 @app.route('/configfile')
 async def configfile(request):
