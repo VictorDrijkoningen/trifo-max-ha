@@ -466,32 +466,26 @@ def settings_page(CONFIG_FILE):
 
         <script type="text/javascript">
             try {
-                var socket = new WebSocket("ws://"+window.location.host+"/websocket");        
+                var dsocket = new WebSocket("ws://"+window.location.host+"/websocket");        
             } catch {
-                var socket = new WebSocket("wss://"+window.location.host+"/websocket");
+                var dsocket = new WebSocket("wss://"+window.location.host+"/websocket");
             }
             var wsclosed = false;
             const retrytime = 3000;
             var lastretry = window.performance.now();
 
-            // Listen for messages
-            socket.addEventListener("message", (event) => {
-                console.log("Message from server ", event.data);
-            });
-
-
             function send_data(data){
-                if (socket.readyState == 1){
-                    socket.send(data);
+                if (dsocket.readyState == 1){
+                    dsocket.send(data);
                 } else {
-                    console.log("not ready!", socket.readyState);
+                    console.log("not ready!", dsocket.readyState);
 
                     if (window.performance.now()-lastretry > retrytime){
                         console.log("making new connection");
                         try {
-                            var socket = new WebSocket("ws://"+window.location.host+"/websocket");        
+                            dsocket = new WebSocket("ws://"+window.location.host+"/websocket");        
                         } catch {
-                            var socket = new WebSocket("wss://"+window.location.host+"/websocket");
+                            dsocket = new WebSocket("wss://"+window.location.host+"/websocket");
                         }
                         lastretry = window.performance.now();
                     }
