@@ -126,7 +126,7 @@ def import_config_file(CONFIG_FILE):
         config_data = json.load(f)
     return config_data
 
-def change_setting(CONFIG_FILE, message, simple_schema):
+def change_setting(CONFIG_FILE, message, simple_schema, env):
     try:
         message = json.loads(message)
         if "mondaytime" in message.keys():
