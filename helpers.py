@@ -15,7 +15,7 @@ def check_env_file(ENV_FILE: str) -> dict:
         save_env_file(ENV_FILE, env)
     if not "webserver_access_key" in env.keys():
         password = ""
-        for _ in range(12):
+        for _ in range(16):
             password += secrets.choice(string.ascii_lowercase)
         env['webserver_access_key'] = password
         save_env_file(ENV_FILE, env)
