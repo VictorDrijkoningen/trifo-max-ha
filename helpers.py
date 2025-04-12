@@ -1,5 +1,7 @@
 import os
 import json
+import string
+import secrets
 
 def check_env_file(ENV_FILE: str) -> dict:
     try:
@@ -10,6 +12,12 @@ def check_env_file(ENV_FILE: str) -> dict:
 
     if not "timezone" in env.keys():
         env['timezone'] = 0
+        save_env_file(ENV_FILE, env)
+    if not "webserver_access_key" in env.keys():
+        password = ""
+        for _ in range(12):
+            password += secrets.choice(string.ascii_lowercase)
+        env['webserver_access_key'] = password
         save_env_file(ENV_FILE, env)
     return env
 
@@ -457,7 +465,11 @@ def settings_page(CONFIG_FILE):
 
 
         <script type="text/javascript">
-            var socket = new WebSocket("ws://"+window.location.host+"/websocket");
+            try {
+                var socket = new WebSocket("ws://"+window.location.host+"/websocket");        
+            } catch {
+                var socket = new WebSocket("wss://"+window.location.host+"/websocket");
+            }
             var wsclosed = false;
             const retrytime = 3000;
             var lastretry = window.performance.now();
@@ -476,7 +488,11 @@ def settings_page(CONFIG_FILE):
 
                     if (window.performance.now()-lastretry > retrytime){
                         console.log("making new connection");
-                        socket = new WebSocket("ws://"+window.location.host+"/websocket");
+                        try {
+                            var socket = new WebSocket("ws://"+window.location.host+"/websocket");        
+                        } catch {
+                            var socket = new WebSocket("wss://"+window.location.host+"/websocket");
+                        }
                         lastretry = window.performance.now();
                     }
                 }

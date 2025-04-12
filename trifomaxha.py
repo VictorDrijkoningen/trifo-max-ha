@@ -1,5 +1,6 @@
 import asyncio
 from microdot import Microdot
+from auth import BasicAuth
 import helpers
 from ws import with_websocket
 
@@ -12,20 +13,29 @@ env = helpers.check_env_file(ENV_FILE)
 simple_schema = helpers.get_simple_schema(CONFIG_FILE)
 
 app = Microdot()
+auth = BasicAuth(app)
+
+@auth.authenticate
+async def verify_user(request, username, password):
+    if password == env['webserver_access_key']:
+        return
 
 @app.route('/')
 async def index(request):
     return helpers.index_page(), {'Content-Type': 'text/html'}
 
 @app.route('/configfile')
+@auth
 async def configfile(request):
     return helpers.import_config_file(CONFIG_FILE)
 
 @app.route('/settings')
+@auth
 async def settings(request):
     return helpers.settings_page(CONFIG_FILE), {'Content-Type': 'text/html'}
 
 @app.route('/stop')
+@auth
 async def stop(request):
     global running
     running = False
@@ -35,6 +45,7 @@ async def stop(request):
 
 @app.route('/websocket')
 @with_websocket
+@auth
 async def websocket(request, ws):
     global simple_schema
     global env
@@ -43,11 +54,6 @@ async def websocket(request, ws):
         print("ws: "+message)
         helpers.change_setting(CONFIG_FILE, message, simple_schema, env)
 
-
-
-@app.route('/config_file')
-async def see(request):
-    return str(helpers.import_config_file(CONFIG_FILE=CONFIG_FILE))
 
 async def main():
     global running
