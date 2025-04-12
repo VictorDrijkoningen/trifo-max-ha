@@ -39,7 +39,6 @@ async def settings(request):
     return helpers.settings_page(CONFIG_FILE), {'Content-Type': 'text/html'}
 
 @app.route('/stop')
-@auth
 async def stop(request):
     global running
     running = False
