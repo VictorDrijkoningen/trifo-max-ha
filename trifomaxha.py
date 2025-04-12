@@ -18,9 +18,10 @@ auth = BasicAuth(app)
 @auth.authenticate
 async def verify_user(request, username, password):
     if password == env['webserver_access_key']:
-        print(f"successful login from {str(request.client_addr)}")
+        print(f"successful login from")
     else:
-        print(f"wrong login from {str(request.client_addr)}")
+        print(f"wrong login from ")
+        # {str(request.client_addr)}
     return
 
 @app.route('/')
