@@ -64,7 +64,9 @@ async def websocket(request, ws):
 async def main():
     global running
     # start the server in a background task
-    server = asyncio.create_task(app.start_server())
+    sslctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    sslctx.load_cert_chain(*SSL_FILES)
+    server = asyncio.create_task(app.start_server(ssl=sslctx))
 
     while running:
         await asyncio.sleep(1)
