@@ -2,6 +2,7 @@ import os
 import json
 import string
 import secrets
+import datetime
 
 def check_env_file(ENV_FILE: str) -> dict:
     try:
@@ -13,23 +14,37 @@ def check_env_file(ENV_FILE: str) -> dict:
     if not "timezone" in env.keys():
         env['timezone'] = 0
         save_env_file(ENV_FILE, env)
+
     if not "webserver_access_key" in env.keys():
         password = ""
         for _ in range(16):
             password += secrets.choice(string.ascii_lowercase)
         env['webserver_access_key'] = password
         save_env_file(ENV_FILE, env)
+
+    if not "ssl_key_creationyear" in env.keys():
+        env['ssl_key_creationyear'] = 2000
+        save_env_file(ENV_FILE, env)
+
     return env
 
 def save_env_file(ENV_FILE: str, env: dict) -> None:
     with open(ENV_FILE, "w") as f:
         json.dump(env, f)
     
-def check_ssl_pem_files(SSLFILES):
+def check_ssl_pem_files(SSLFILES, env, ENV_FILE):
     if not (os.path.isfile(SSLFILES[0]) and os.path.isfile(SSLFILES[1])):
-        os.system(f"openssl req -x509 -batch -newkey rsa:4096 -nodes -out {SSLFILES[0]} -keyout {SSLFILES[1]} -days 365")
+        os.system(f"openssl req -x509 -batch -newkey rsa:4096 -nodes -out {SSLFILES[0]} -keyout {SSLFILES[1]} -days 366")
+        env['ssl_key_creationyear'] = datetime.date.today().year
+        save_env_file(ENV_FILE, env)
+        print("created ssl cert")
+    elif not env['ssl_key_creationyear'] == datetime.date.today().year:
+        os.system(f"openssl req -x509 -batch -newkey rsa:4096 -nodes -out {SSLFILES[0]} -keyout {SSLFILES[1]} -days 366")
+        env['ssl_key_creationyear'] = datetime.date.today().year
+        save_env_file(ENV_FILE, env)
 
-
+        print("updated ssl cert")
+        
 def wraps(wrapped):
     def _(wrapper):
         return wrapper

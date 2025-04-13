@@ -10,9 +10,8 @@ ENV_FILE = "./trifomaxha_env.json"
 SSL_FILES = ("./trifomaxha_cert.pem", "./trifomaxha_key.pem")
 running = True
 helpers.check_auto_start()
-helpers.check_ssl_pem_files(SSL_FILES)
 env = helpers.check_env_file(ENV_FILE)
-
+helpers.check_ssl_pem_files(SSL_FILES, env, ENV_FILE)
 simple_schema = helpers.get_simple_schema(CONFIG_FILE)
 
 app = Microdot()
@@ -66,7 +65,7 @@ async def main():
     # start the server in a background task
     sslctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     sslctx.load_cert_chain(*SSL_FILES)
-    server = asyncio.create_task(app.start_server(ssl=sslctx))
+    server = asyncio.create_task(app.start_server(port=443,ssl=sslctx))
 
     while running:
         await asyncio.sleep(1)
