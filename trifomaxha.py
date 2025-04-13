@@ -66,6 +66,7 @@ async def main():
     sslctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     sslctx.load_cert_chain(*SSL_FILES)
     server = asyncio.create_task(app.start_server(port=443,ssl=sslctx))
+    print("started webserver on port 443")
 
     while running:
         await asyncio.sleep(1)
