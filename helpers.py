@@ -28,10 +28,12 @@ def check_env_file(ENV_FILE: str) -> dict:
 
     return env
 
+
 def save_env_file(ENV_FILE: str, env: dict) -> None:
     with open(ENV_FILE, "w") as f:
         json.dump(env, f)
-    
+
+
 def check_ssl_pem_files(SSLFILES, env, ENV_FILE):
     if not (os.path.isfile(SSLFILES[0]) and os.path.isfile(SSLFILES[1])):
         os.system(f"openssl req -x509 -batch -newkey rsa:4096 -nodes -out {SSLFILES[0]} -keyout {SSLFILES[1]} -days 366")
@@ -44,11 +46,13 @@ def check_ssl_pem_files(SSLFILES, env, ENV_FILE):
         save_env_file(ENV_FILE, env)
 
         print("updated ssl cert")
-        
+
+
 def wraps(wrapped):
     def _(wrapper):
         return wrapper
     return _
+
 
 def check_auto_start() -> None:
     if not os.path.isfile('/etc/init.d/S90trifomaxha.sh'):
@@ -58,7 +62,8 @@ cd /root
 mv ./trifomaxha.py-aarch64 ./trifomaxha.py-aarch64.current
 ./trifomaxha.py-aarch64.current > trifomaxha.log &
 """)
-        print("installed autostart file")
+        print("installed autostart file /etc/init.d/S90trifomaxha.sh")
+
 
 def get_simple_schema(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)
@@ -87,6 +92,7 @@ def get_simple_schema(CONFIG_FILE):
         ]
         export_config_file(CONFIG_FILE, simple_schema)
     return simple_schema
+
 
 def export_config_file(CONFIG_FILE, simpledata:list):
     export = dict()
@@ -144,6 +150,7 @@ def import_config_file(CONFIG_FILE):
     with open(CONFIG_FILE, 'r') as f:
         config_data = json.load(f)
     return config_data
+
 
 def change_setting(CONFIG_FILE, message, simple_schema, env):
     try:
@@ -204,6 +211,7 @@ def change_setting(CONFIG_FILE, message, simple_schema, env):
         export_config_file(CONFIG_FILE, simple_schema)
     except Exception as e:
         print(f"Malformed json {e}")
+
 
 def index_page():
     out = """
@@ -294,8 +302,9 @@ def index_page():
 </html>
 
 """
-
     return out
+
+
 def settings_page(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)
     out = """
