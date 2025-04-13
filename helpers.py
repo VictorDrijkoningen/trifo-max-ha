@@ -25,6 +25,10 @@ def save_env_file(ENV_FILE: str, env: dict) -> None:
     with open(ENV_FILE, "w") as f:
         json.dump(env, f)
     
+def check_ssl_pem_files(SSLFILES):
+    if not (os.path.isfile(SSLFILES[0]) and os.path.isfile(SSLFILES[1])):
+        os.system(f"openssl req -x509 -newkey rsa:4096 -nodes -out {SSLFILES[0]} -keyout {SSLFILES[1]} -days 365")
+
 
 def wraps(wrapped):
     def _(wrapper):

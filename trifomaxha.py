@@ -3,11 +3,14 @@ from microdot import Microdot
 from auth import BasicAuth
 import helpers
 from ws import with_websocket
+import ssl
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
 ENV_FILE = "./trifomaxha_env.json"
+SSL_FILES = ("./trifomaxha_cert.pem", "./trifomaxha_key.pem")
 running = True
 helpers.check_auto_start()
+helpers.check_ssl_pem_files(SSL_FILES)
 env = helpers.check_env_file(ENV_FILE)
 
 simple_schema = helpers.get_simple_schema(CONFIG_FILE)
