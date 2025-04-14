@@ -1,16 +1,60 @@
 import os
 import json
+import string
+import secrets
+import datetime
 
-def test():
-    return 3
-    
+def check_env_file(ENV_FILE: str) -> dict:
+    try:
+        with open(ENV_FILE, "r") as f:
+            env = json.load(f)
+    except:
+        env = dict()
+
+    if not "timezone" in env.keys():
+        env['timezone'] = 0
+        save_env_file(ENV_FILE, env)
+
+    if not "webserver_access_key" in env.keys():
+        password = ""
+        for _ in range(16):
+            password += secrets.choice(string.ascii_lowercase)
+        env['webserver_access_key'] = password
+        save_env_file(ENV_FILE, env)
+
+    if not "ssl_key_creationyear" in env.keys():
+        env['ssl_key_creationyear'] = 2000
+        save_env_file(ENV_FILE, env)
+
+    return env
+
+
+def save_env_file(ENV_FILE: str, env: dict) -> None:
+    with open(ENV_FILE, "w") as f:
+        json.dump(env, f)
+
+
+def check_ssl_pem_files(SSLFILES, env, ENV_FILE):
+    if not (os.path.isfile(SSLFILES[0]) and os.path.isfile(SSLFILES[1])):
+        os.system(f"openssl req -x509 -batch -newkey rsa:4096 -nodes -out {SSLFILES[0]} -keyout {SSLFILES[1]} -days 366")
+        env['ssl_key_creationyear'] = datetime.date.today().year
+        save_env_file(ENV_FILE, env)
+        print("created ssl cert")
+    elif not env['ssl_key_creationyear'] == datetime.date.today().year:
+        os.system(f"openssl req -x509 -batch -newkey rsa:4096 -nodes -out {SSLFILES[0]} -keyout {SSLFILES[1]} -days 366")
+        env['ssl_key_creationyear'] = datetime.date.today().year
+        save_env_file(ENV_FILE, env)
+
+        print("updated ssl cert")
+
 
 def wraps(wrapped):
     def _(wrapper):
         return wrapper
     return _
 
-def check_auto_start():
+
+def check_auto_start() -> None:
     if not os.path.isfile('/etc/init.d/S90trifomaxha.sh'):
         with open("/etc/init.d/S90trifomaxha.sh", 'w') as f:
             f.write("""#! /bin/sh
@@ -18,7 +62,8 @@ cd /root
 mv ./trifomaxha.py-aarch64 ./trifomaxha.py-aarch64.current
 ./trifomaxha.py-aarch64.current > trifomaxha.log &
 """)
-        print("installed autostart file")
+        print("installed autostart file /etc/init.d/S90trifomaxha.sh")
+
 
 def get_simple_schema(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)
@@ -47,6 +92,7 @@ def get_simple_schema(CONFIG_FILE):
         ]
         export_config_file(CONFIG_FILE, simple_schema)
     return simple_schema
+
 
 def export_config_file(CONFIG_FILE, simpledata:list):
     export = dict()
@@ -105,7 +151,8 @@ def import_config_file(CONFIG_FILE):
         config_data = json.load(f)
     return config_data
 
-def change_setting(CONFIG_FILE, message, simple_schema):
+
+def change_setting(CONFIG_FILE, message, simple_schema, env):
     try:
         message = json.loads(message)
         if "mondaytime" in message.keys():
@@ -165,6 +212,7 @@ def change_setting(CONFIG_FILE, message, simple_schema):
     except Exception as e:
         print(f"Malformed json {e}")
 
+
 def index_page():
     out = """
 <!DOCTYPE html>
@@ -181,7 +229,6 @@ def index_page():
                     <td>
                         <div style="text-align: center;">
                             <h3>MAX Web Server</h3>
-                            <button onclick="location.href='/stop'"> STOP webserver </button>
                         </div>
                     </td>
                     <td></td>
@@ -217,7 +264,7 @@ def index_page():
                     <td>
                         <div style="text-align: center;">
                             <p>
-                                1
+                                <button onclick="location.href='/stop'"> STOP webserver </button>
                             </p>
                         </div>
                     </td>
@@ -255,8 +302,9 @@ def index_page():
 </html>
 
 """
-
     return out
+
+
 def settings_page(CONFIG_FILE):
     config_data = import_config_file(CONFIG_FILE)
     out = """
@@ -276,13 +324,16 @@ def settings_page(CONFIG_FILE):
                     <td>
                         <div style="text-align: center;">
                             <h3>MAX Web Server</h3>
-                            <button onclick="location.href='/stop'"> STOP webserver </button>
                         </div>
                     </td>
                     <td></td>
                 </tr>
 
-
+                <tr>
+                    <td>Enabled</td>
+                    <td>Day</td>
+                    <td>Time in UTC</td>
+                </tr>
 
 
                 <tr>
@@ -442,26 +493,28 @@ def settings_page(CONFIG_FILE):
 
 
         <script type="text/javascript">
-            var socket = new WebSocket("ws://"+window.location.host+"/websocket");
+            try {
+                var dsocket = new WebSocket("ws://"+window.location.host+"/websocket");        
+            } catch {
+                var dsocket = new WebSocket("wss://"+window.location.host+"/websocket");
+            }
             var wsclosed = false;
             const retrytime = 3000;
             var lastretry = window.performance.now();
 
-            // Listen for messages
-            socket.addEventListener("message", (event) => {
-                console.log("Message from server ", event.data);
-            });
-
-
             function send_data(data){
-                if (socket.readyState == 1){
-                    socket.send(data);
+                if (dsocket.readyState == 1){
+                    dsocket.send(data);
                 } else {
-                    console.log("not ready!", socket.readyState);
+                    console.log("not ready!", dsocket.readyState);
 
                     if (window.performance.now()-lastretry > retrytime){
                         console.log("making new connection");
-                        socket = new WebSocket("ws://"+window.location.host+"/websocket");
+                        try {
+                            dsocket = new WebSocket("ws://"+window.location.host+"/websocket");        
+                        } catch {
+                            dsocket = new WebSocket("wss://"+window.location.host+"/websocket");
+                        }
                         lastretry = window.performance.now();
                     }
                 }
