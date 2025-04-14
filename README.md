@@ -25,6 +25,6 @@ scp ./trifomaxha.py-aarch64 root@[robotip]:/root/
 ```
 https://_:YOURPASSWORDHERE@YOURTRIFOMAXIPHERE
 ```
-
+The password can be found in the trifomax_env.json file
 
 ![webpage in ha](assets/ha.png)
