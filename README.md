@@ -21,9 +21,10 @@ scp ./trifomaxha.py-aarch64 root@[robotip]:/root/
 
 
 # Integration with home assistant (work in progress)
+- embed this created domain in home assistant using a Webpage Card with the following url:
+```
+https://_:YOURPASSWORDHERE@YOURTRIFOMAXIPHERE
+```
 
-- create a reverse proxy to the trifo max webpage (because homeassistant over https cannot embed an http page)
-
-- embed this created domain in home assistant
 
 ![webpage in ha](assets/ha.png)
