@@ -25,6 +25,9 @@ def check_env_file(ENV_FILE: str) -> dict:
     if not "ssl_key_creationyear" in env.keys():
         env['ssl_key_creationyear'] = 2000
         save_env_file(ENV_FILE, env)
+    
+    if not "ssl_key_auto_update" in env.keys():
+        env['ssl_key_auto_update'] = True
 
     return env
 
@@ -40,7 +43,7 @@ def check_ssl_pem_files(SSLFILES, env, ENV_FILE):
         env['ssl_key_creationyear'] = datetime.date.today().year
         save_env_file(ENV_FILE, env)
         print("created ssl cert")
-    elif not env['ssl_key_creationyear'] == datetime.date.today().year:
+    elif not env['ssl_key_creationyear'] == datetime.date.today().year and env['ssl_key_auto_update']:
         os.system(f"openssl req -x509 -batch -newkey rsa:4096 -nodes -out {SSLFILES[0]} -keyout {SSLFILES[1]} -days 366")
         env['ssl_key_creationyear'] = datetime.date.today().year
         save_env_file(ENV_FILE, env)
