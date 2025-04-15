@@ -23,8 +23,8 @@ scp ./trifomaxha.py-aarch64 root@[robotip]:/root/
 # Integration with home assistant (work in progress)
 - embed this created domain in home assistant using a Webpage Card with the following url:
 ```
-https://_:YOURPASSWORDHERE@YOURTRIFOMAXIPHERE
+https://YOURTRIFOMAXIPHERE/settings?password=YOURPASSWORDHERE
 ```
-The password can be found in the trifomax_env.json file
+The password can be found in the trifomax_env.json file (and can also be changed)
 
 ![webpage in ha](assets/ha.png)
