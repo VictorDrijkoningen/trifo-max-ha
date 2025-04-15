@@ -8,7 +8,7 @@ This repo contains the software that can be run on a trifo max to create a webpa
 
 - have docker installed
 
-- run build.sh
+- run build.sh (warning: this can take a good while on non-arm64 machines.)
 
 - move trifomaxha.py-aarch64 to trifo max to /root/trifomaxha.py-aarch64
 

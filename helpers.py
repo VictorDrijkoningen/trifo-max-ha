@@ -47,7 +47,6 @@ def check_ssl_pem_files(SSLFILES, env, ENV_FILE):
         os.system(f"openssl req -x509 -batch -newkey rsa:4096 -nodes -out {SSLFILES[0]} -keyout {SSLFILES[1]} -days 366")
         env['ssl_key_creationyear'] = datetime.date.today().year
         save_env_file(ENV_FILE, env)
-
         print("updated ssl cert")
 
 
