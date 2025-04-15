@@ -56,8 +56,8 @@ def wraps(wrapped):
     return _
 
 
-def check_auto_start() -> None:
-    if not os.path.isfile('/etc/init.d/S90trifomaxha.sh'):
+def check_auto_start(force_new = False) -> None:
+    if not os.path.isfile('/etc/init.d/S90trifomaxha.sh') or force_new:
         with open("/etc/init.d/S90trifomaxha.sh", 'w') as f:
             f.write("""#! /bin/sh
 cd /root
