@@ -19,7 +19,7 @@ auth = BasicAuth(app)
 
 @auth.authenticate
 async def verify_user(request, username, password):
-    if "password" in request.args.keys() and password == request.args['password']:
+    if "password" in request.args.keys() and env['webserver_access_key'] == request.args['password']:
         print(f"successful login from {str(request.client_addr)}")
         return True
     elif password == env['webserver_access_key']:
