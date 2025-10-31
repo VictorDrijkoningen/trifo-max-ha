@@ -79,7 +79,7 @@ async def main():
     #  Socket to talk to server
     print("Connecting to hello world server…")
     socket = context.socket(zmq.REQ)
-    socket.connect("/tmp/TrifoIPC_sensor_node-robot_control_REQ")
+    socket.connect("ipc:///tmp/TrifoIPC_sensor_node-robot_control_REQ")
 
     #  Do 10 requests, waiting each time for a response
     for request in range(5):
