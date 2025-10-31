@@ -3,7 +3,7 @@
 ARCH='aarch64'
 ENTRYPOINT='trifomaxha.py'
 HIDDEN_IMPORTS=""
-IMPORTS=""
+IMPORTS="pyzmq"
 
 
 run_docker() {

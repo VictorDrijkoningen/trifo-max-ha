@@ -5,6 +5,7 @@ import helpers
 from ws import with_websocket
 import ssl
 import os
+import zmq
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
 ENV_FILE = "./trifomaxha_env.json"
@@ -72,6 +73,22 @@ async def main():
     server = asyncio.create_task(app.start_server(port=443,ssl=sslctx))
     print("started webserver on port 443")
     print(f"running pid {os.getpid()}")
+
+    context = zmq.Context()
+
+    #  Socket to talk to server
+    print("Connecting to hello world server…")
+    socket = context.socket(zmq.REQ)
+    socket.connect("/tmp/TrifoIPC_sensor_node-robot_control_REQ")
+
+    #  Do 10 requests, waiting each time for a response
+    for request in range(5):
+        print("Sending request %s …" % request)
+        socket.send(b"Hello")
+
+        #  Get the reply.
+        message = socket.recv()
+        print("Received reply %s [ %s ]" % (request, message))
 
     while running:
         await asyncio.sleep(1)
