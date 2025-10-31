@@ -4,6 +4,7 @@ from auth import BasicAuth
 import helpers
 from ws import with_websocket
 import ssl
+import os
 
 CONFIG_FILE = "/data/app/config_mono_auto_tasks.json"
 ENV_FILE = "./trifomaxha_env.json"
@@ -70,6 +71,7 @@ async def main():
     sslctx.load_cert_chain(*SSL_FILES)
     server = asyncio.create_task(app.start_server(port=443,ssl=sslctx))
     print("started webserver on port 443")
+    print(f"running pid {os.getpid()}")
 
     while running:
         await asyncio.sleep(1)
